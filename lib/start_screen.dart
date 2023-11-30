@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:quiz/gradient_container.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StartScreen extends StatelessWidget {
-  const StartScreen({super.key});
+  const StartScreen({super.key, required this.startQuizAction});
 
-  void startQuiz() {}
+  final void Function() startQuizAction;
 
   @override
   Widget build(BuildContext context) {
-    return GradientContainer(
-      colors: const [
-        Color.fromARGB(255, 78, 13, 151),
-        Color.fromARGB(255, 107, 15, 168)
-      ],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      child: Column(
+    return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(
@@ -23,20 +16,13 @@ class StartScreen extends StatelessWidget {
             width: 300,
             color: const Color.fromARGB(150, 255, 255, 255),
           ),
-          // Opacity(
-          //   opacity: 1.0,
-          //   child: Image.asset(
-          //     'assets/images/quiz-logo.png',
-          //     width: 300,
-          //   ),
-          // ),
           const SizedBox(
             height: 80,
           ),
-          const Text(
+          Text(
             'Learn Flutter the fun way!',
-            style: TextStyle(
-              color: Colors.white,
+            style: GoogleFonts.lato(
+              color: const Color.fromARGB(255, 237, 223, 252),
               fontSize: 24,
             ),
           ),
@@ -44,7 +30,7 @@ class StartScreen extends StatelessWidget {
             height: 30,
           ),
           OutlinedButton.icon(
-            onPressed: startQuiz,
+            onPressed: startQuizAction,
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
               textStyle: const TextStyle(fontSize: 12),
@@ -54,7 +40,6 @@ class StartScreen extends StatelessWidget {
             label: const Text('Start Quiz'),
           ),
         ],
-      ),
-    );
+      );
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quiz/navigation/coordinator/app_coordinator.dart';
+import 'package:quiz/navigation/route/app_route.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.onStartQuiz});
+  const HomeScreen({super.key, required this.coordinator});
 
-  final void Function() onStartQuiz;
+  final AppCoordinator coordinator;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,9 @@ class HomeScreen extends StatelessWidget {
           height: 30,
         ),
         OutlinedButton.icon(
-          onPressed: onStartQuiz,
+          onPressed: () {
+            coordinator.trigger(route: AppRoute.questions);
+          },
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.white,
             textStyle: const TextStyle(fontSize: 12),

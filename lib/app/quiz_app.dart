@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/app/gradient_container.dart';
-import 'package:quiz/screens/summary/summary_screen.dart';
-import 'package:quiz/screens/home/home_screen.dart';
-import 'package:quiz/screens/questions/questions_screen.dart';
-import 'package:quiz/data/questions.dart';
+import 'package:quiz/navigation/coordinator/app_coordinator.dart';
 
 class QuizApp extends StatefulWidget {
   const QuizApp({super.key});
@@ -15,67 +12,44 @@ class QuizApp extends StatefulWidget {
 }
 
 class _QuizAppState extends State<QuizApp> {
-  List<String> selectedAnswers = [];
-  String activeScreen = 'start-screen';
+  Widget? activeScreenWidget;
+  AppCoordinator? coordinator;
 
-  void startQuiz() {
-    setState(() {
-      activeScreen = 'questions-screen';
-    });
+  @override
+  void initState() {
+    coordinator = AppCoordinator(onTriggerRoute: updateActiveScreenWidget);
+    activeScreenWidget = coordinator!.initial();
+    super.initState();
   }
 
-  void selectAnswer({required String answer}) {
-    selectedAnswers.add(answer);
-
-    if (selectedAnswers.length == questions.length) {
-      setState(() {
-        activeScreen = 'results-screen';
-      });
-    }
-  }
-
-  void goHome() {
-    selectedAnswers = [];
-
+  void updateActiveScreenWidget({required Widget widget}) {
     setState(() {
-      activeScreen = 'start_screen';
-    });
-  }
-
-  void restartQuiz() {
-    selectedAnswers = [];
-
-    setState(() {
-      activeScreen = 'questions-screen';
+      activeScreenWidget = widget;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget screenWidget = HomeScreen(onStartQuiz: startQuiz);
-
-    if (activeScreen == 'start-screen') {
-      screenWidget = HomeScreen(onStartQuiz: startQuiz);
-    } else if (activeScreen == 'questions-screen') {
-      screenWidget = QuestionsScreen(onSelectAnswer: selectAnswer);
-    } else if (activeScreen == 'results-screen') {
-      screenWidget = SummaryScreen(onGoHome: goHome,
-        onRestart: restartQuiz,
-        selectedAnswers: selectedAnswers,);
-    }
-
-    return MaterialApp(
-      home: Scaffold(
-        body: GradientContainer(
-          colors: const [
-            Color.fromARGB(255, 78, 13, 151),
-            Color.fromARGB(255, 107, 15, 168)
-          ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          child: screenWidget,
+    if (activeScreenWidget != null) {
+      return MaterialApp(
+        home: Scaffold(
+          body: GradientContainer(
+            colors: const [
+              Color.fromARGB(255, 78, 13, 151),
+              Color.fromARGB(255, 107, 15, 168)
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            child: activeScreenWidget!,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return const AlertDialog(
+        icon: Icon(Icons.error),
+        title: Text('Error'),
+        content: Text('Failed to launch the app!'),
+      );
+    }
   }
 }

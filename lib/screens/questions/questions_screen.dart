@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quiz/screens/questions/answer_button.dart';
 import 'package:quiz/Data/questions.dart';
+import 'package:quiz/navigation/coordinator/app_coordinator.dart';
+import 'package:quiz/navigation/route/app_route.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key, required this.onSelectAnswer});
+  const QuestionsScreen({super.key, required this.coordinator});
 
-  final void Function({required String answer}) onSelectAnswer;
+  final AppCoordinator coordinator;
 
   @override
   State<StatefulWidget> createState() {
@@ -16,12 +18,22 @@ class QuestionsScreen extends StatefulWidget {
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
   int currentQuestionIndex = 0;
+  List<String> selectedAnswers = [];
 
   void answerQuestion({required String answer}) {
-    widget.onSelectAnswer(answer: answer);
-    setState(() {
-      currentQuestionIndex += 1;
-    });
+    // widget.onSelectAnswer(answer: answer);
+    selectedAnswers.add(answer);
+    if (selectedAnswers.length == questions.length) {
+      widget.coordinator.trigger(
+        route: AppRoute.summary,
+        arguments: [selectedAnswers],
+      );
+      selectedAnswers = [];
+    } else {
+      setState(() {
+        currentQuestionIndex += 1;
+      });
+    }
   }
 
   @override

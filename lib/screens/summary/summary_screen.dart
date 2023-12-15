@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:quiz/data/questions.dart';
 import 'package:quiz/screens/summary/questions_summary.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quiz/navigation/coordinator/app_coordinator.dart';
+import 'package:quiz/navigation/route/app_route.dart';
 
 class SummaryScreen extends StatelessWidget {
-  const SummaryScreen({super.key, required this.onGoHome, required this.onRestart, required this.selectedAnswers,});
+  const SummaryScreen({super.key, required this.coordinator, required this.selectedAnswers,});
 
-  final void Function() onGoHome;
-  final void Function() onRestart;
+  final AppCoordinator coordinator;
   final List<String> selectedAnswers;
 
   List<Map<String, Object>> getSummaryData() {
@@ -71,7 +72,9 @@ class SummaryScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextButton.icon(
-                  onPressed: onGoHome,
+                  onPressed: () {
+                    coordinator.trigger(route: AppRoute.home);
+                  },
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
                   ),
@@ -79,7 +82,9 @@ class SummaryScreen extends StatelessWidget {
                   label: const Text('Go Home!'),
                 ),
                 TextButton.icon(
-                  onPressed: onRestart,
+                  onPressed: () {
+                    coordinator.trigger(route: AppRoute.questions);
+                  },
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
                   ),

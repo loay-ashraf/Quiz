@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quiz/answer_button.dart';
+import 'package:quiz/screens/questions/answer_button.dart';
 import 'package:quiz/Data/questions.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
+  const QuestionsScreen({super.key, required this.onSelectAnswer});
+
+  final void Function({required String answer}) onSelectAnswer;
 
   @override
   State<StatefulWidget> createState() {
@@ -15,13 +17,10 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   int currentQuestionIndex = 0;
 
-  void answerQuestion() {
+  void answerQuestion({required String answer}) {
+    widget.onSelectAnswer(answer: answer);
     setState(() {
-      if (currentQuestionIndex < questions.length - 1) {
-        currentQuestionIndex += 1;
-      } else {
-        currentQuestionIndex = 0;
-      }
+      currentQuestionIndex += 1;
     });
   }
 
@@ -51,15 +50,20 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 80),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ...currentQuestionAnswers.map(
-                (item) {
-                  return AnswerButton(
-                      answerChosen: answerQuestion, answerText: item);
-                },
-              ),
-            ],
+            children: currentQuestionAnswers.map(
+              (item) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  child: AnswerButton(
+                      onPressed: () {
+                        answerQuestion(answer: item);
+                      },
+                      answerText: item),
+                );
+              },
+            ).toList(),
           ),
         ),
       ],

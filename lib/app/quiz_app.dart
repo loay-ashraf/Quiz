@@ -32,6 +32,7 @@ class _QuizAppState extends State<QuizApp> {
   Widget build(BuildContext context) {
     if (activeScreenWidget != null) {
       return MaterialApp(
+        title: 'Quiz',
         home: Scaffold(
           body: GradientContainer(
             colors: const [
